@@ -10,13 +10,13 @@ import UIKit
 
 class NetworkManager {
     
-    typealias NetworkCompletion<R> = (R?, Int?, NetworkError?) -> Void
+    typealias NetworkCompletion<T> = (T?, Int?, NetworkError?) -> Void
     
     let dataLoader: NetworkDataLoader
-    init(dataLoader: NetworkDataLoader = URLSession.shared) {
+    init(dataLoader: NetworkDataLoader) {
         self.dataLoader = dataLoader
     }
-    static let shared = NetworkManager()
+    static let shared = NetworkManager(dataLoader: URLSession.shared)
     
     enum Method: String {
         case get = "GET"

@@ -12,7 +12,18 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
+        view.backgroundColor = .white
+        
+        let helloWorldLabel = UILabel()
+        helloWorldLabel.text = "Hello, World!"
+        helloWorldLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        view.addSubview(helloWorldLabel)
+        NSLayoutConstraint.activate([
+            helloWorldLabel.centerXAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerXAnchor),
+            helloWorldLabel.centerYAnchor.constraint(equalTo: view.safeAreaLayoutGuide.centerYAnchor)
+        ])
     }
 
 
