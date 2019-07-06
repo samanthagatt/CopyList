@@ -22,10 +22,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
+            let scheme = components.scheme,
+            let host = components.host,
             let queryItems = components.queryItems else { return false }
-        
-        print("URL Path: ", components.path)
-        print("URL Query Items: ", queryItems)
+        print("URL Scheme:", scheme)
+        print("URL Host:", host)
+        print("URL Path:", components.path)
+        print("URL Query Items:", queryItems)
         return true
     }
 }

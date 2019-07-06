@@ -33,9 +33,10 @@ class ViewController: UIViewController {
     }
     
     @objc func getAccess() {
-        if let url = SpotifyAuthManager().requestAuthorizationURL {
-            UIApplication.shared.open(url)
-        }
+        let webViewController = WebViewController()
+        webViewController.urlToLoad = SpotifyAuthManager().requestAuthorizationURL
+        let navController = UINavigationController(rootViewController: webViewController)
+        present(navController, animated: true)
     }
 }
 
