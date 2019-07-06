@@ -67,7 +67,9 @@ class NetworkManager {
                 }
                 let decodedData: D
                 do {
-                    decodedData = try JSONDecoder().decode(D.self, from: data)
+                    let decoder = JSONDecoder()
+                    decoder.keyDecodingStrategy = .convertFromSnakeCase
+                    decodedData = try decoder.decode(D.self, from: data)
                 } catch let decodeError {
                     completion(nil, responseCode, .decodingData(error: decodeError))
                     return
@@ -77,6 +79,7 @@ class NetworkManager {
         }
     }
     
+    /// Generic method that makes a network request and decodes data into specified type (from JSON)
     func makeRequest<D: Decodable>(method: NetworkManager.Method = .get, baseURLString: String, appendingPaths: [String] = [], queries: [String: String] = [:], headers: [String: String] = [:], encodedData: Data? = nil, completion: @escaping NetworkCompletion<D>) {
         guard let url = constructURL(baseURLString: baseURLString, appendingPaths: appendingPaths, queries: queries) else {
             completion(nil, nil, .constructingURLFailed)
@@ -91,9 +94,19 @@ class NetworkManager {
         dataTask(request: request, completion: completion)
     }
     
-    func makeRequest<E: Encodable, D: Decodable>(method: NetworkManager.Method = .get, baseURLString: String, appendingPaths: [String] = [], queries: [String: String] = [:], headers: [String: String] = [:], body: E, completion: @escaping NetworkCompletion<D>) {
-        
+    /// Form encodes body from dictionary and makes network request
+    func makeRequest<D: Decodable>(method: NetworkManager.Method = .get, baseURLString: String, appendingPaths: [String] = [], queries: [String: String] = [:], headers: [String: String] = [:], bodyForFormEncoding: [String: String], completion: @escaping NetworkCompletion<D>) {
+        var newHeaders = headers
+        newHeaders["Content-Type"] = "application/x-www-form-urlencoded"
+        let body = formEncode(bodyForFormEncoding)
+        makeRequest(method: method, baseURLString: baseURLString, appendingPaths: appendingPaths, queries: queries, headers: newHeaders, encodedData: body, completion: completion)
     }
+    
+    func makeRequest<E: Encodable, D: Decodable>(method: NetworkManager.Method = .get, baseURLString: String, appendingPaths: [String] = [], queries: [String: String] = [:], headers: [String: String] = [:], body: E, completion: @escaping NetworkCompletion<D>) {
+        // TODO: Complete this
+    }
+    
+    
     
     func getImage(url: URL, completion: @escaping NetworkCompletion<UIImage>) {
         dataLoader.loadData(with: url) { (data, response, error) in
@@ -118,7 +131,7 @@ class NetworkManager {
         getImage(url: url, completion: completion)
     }
     
-    func percentEscape(_ string: String) -> String? {
+    private func percentEscape(_ string: String) -> String? {
         var characterSet = CharacterSet.alphanumerics
         characterSet.insert(charactersIn: "-._* ")
         return string
@@ -126,7 +139,7 @@ class NetworkManager {
             .replacingOccurrences(of: " ", with: "+")
     }
     
-    func formEncode(_ parameters: [String : String]) -> Data? {
+    private func formEncode(_ parameters: [String : String]) -> Data? {
         let parameterArray = parameters.compactMap { (key, value) -> String? in
             guard let escapedValue = percentEscape(value) else { return nil }
             return "\(key)=\(escapedValue)"

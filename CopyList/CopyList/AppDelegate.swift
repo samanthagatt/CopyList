@@ -22,13 +22,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
-            let scheme = components.scheme,
-            let host = components.host,
+            let scheme = components.scheme, scheme == redirectScheme,
+            let host = components.host, host == "oauth",
             let queryItems = components.queryItems else { return false }
-        print("URL Scheme:", scheme)
-        print("URL Host:", host)
-        print("URL Path:", components.path)
-        print("URL Query Items:", queryItems)
+        
+        if components.path.contains("spotify") {
+            var code: String?, error: String?, state: String?
+            for queryItem in queryItems {
+                switch queryItem.name {
+                case "code":
+                    code = queryItem.value
+                case "error":
+                    error = queryItem.value
+                case "state":
+                    state = queryItem.value
+                default:
+                    break
+                }
+            }
+            if let error = error {
+                print("There was an error!!", error)
+            }
+            if let code = code, let _ = state {
+                SpotifyAuthManager().requestRefreshAndAccessTokens(code: code)
+            }
+        }
+        
         return true
     }
 }
