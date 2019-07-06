@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  LoginViewController.swift
 //  CopyList
 //
 //  Created by Samantha Gatt on 7/5/19.
@@ -9,11 +9,12 @@
 import UIKit
 import WebKit
 
-class ViewController: UIViewController {
+class LoginViewController: UIViewController {
 
     lazy var spotifyLoginButton: UIButton = {
-        return ViewManager.button(titlesForStates: [("Login with Spotify", .normal)],
-                                  textColorsForStates: [(.black, .normal)],
+        return ViewManager.button(titlesForStates: [("LOGIN WITH SPOTIFY", .normal)],
+                                  textColorsForStates: [(.white, .normal)],
+                                  font: UIFont.preferredFont(forTextStyle: .title2),
                                   contentEdgeInsets: UIEdgeInsets(top: 6, left: 10, bottom: 6, right: 10))
             .addStyling(backgroundColor: .spotifyGreen, cornerRadius: 12)
     }()

@@ -15,7 +15,7 @@ class SpotifyAuthManager {
     var accessToken: String?
     
     var requestAuthorizationURL: URL? = {
-        return NetworkManager.shared.constructURL(baseURLString: SpotifyAuthManager.baseURLString, appendingPaths: ["authorize"], queries: ["client_id": clientID, "response_type": "code", "redirect_uri": redirectURI, "state": "this is the stateeeee"])
+        return NetworkManager.shared.constructURL(baseURLString: SpotifyAuthManager.baseURLString, appendingPaths: ["authorize"], queries: ["client_id": clientID, "response_type": "code", "redirect_uri": redirectURI, "state": "this is the stateeeee", "scope": "playlist-read-private playlist-read-collaborative"])
     }()
     
     func requestRefreshAndAccessTokens(code: String) {
@@ -34,5 +34,9 @@ class SpotifyAuthManager {
             KeychainManager.save(refreshToken, for: spotifyRefreshKey)
             print(KeychainManager.get(spotifyRefreshKey) ?? "nothing stored in keychain!!")
         }
+    }
+    
+    func refreshAccessToken() {
+        
     }
 }
