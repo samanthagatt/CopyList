@@ -15,6 +15,10 @@
 		D69788FE22D0127E006CAE32 /* CopyListUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69788FD22D0127E006CAE32 /* CopyListUITests.swift */; };
 		D697890C22D01395006CAE32 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D697890B22D01395006CAE32 /* NetworkManager.swift */; };
 		D697890F22D01EF5006CAE32 /* NetworkDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D697890E22D01EF5006CAE32 /* NetworkDataLoader.swift */; };
+		D697891122D02E0E006CAE32 /* SpotifyAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D697891022D02E0E006CAE32 /* SpotifyAuthManager.swift */; };
+		D697891422D02FB1006CAE32 /* ViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D697891322D02FB1006CAE32 /* ViewManager.swift */; };
+		D697891622D03011006CAE32 /* UIView+addStyling.swift in Sources */ = {isa = PBXBuildFile; fileRef = D697891522D03011006CAE32 /* UIView+addStyling.swift */; };
+		D697891822D03071006CAE32 /* UIView+addSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D697891722D03071006CAE32 /* UIView+addSubviews.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,6 +53,10 @@
 		D69788FF22D0127E006CAE32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D697890B22D01395006CAE32 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
 		D697890E22D01EF5006CAE32 /* NetworkDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataLoader.swift; sourceTree = "<group>"; };
+		D697891022D02E0E006CAE32 /* SpotifyAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyAuthManager.swift; sourceTree = "<group>"; };
+		D697891322D02FB1006CAE32 /* ViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewManager.swift; sourceTree = "<group>"; };
+		D697891522D03011006CAE32 /* UIView+addStyling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+addStyling.swift"; sourceTree = "<group>"; };
+		D697891722D03071006CAE32 /* UIView+addSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+addSubviews.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,6 +107,7 @@
 		D69788DC22D0127D006CAE32 /* CopyList */ = {
 			isa = PBXGroup;
 			children = (
+				D697891222D02F9B006CAE32 /* User Interface */,
 				D69788DD22D0127D006CAE32 /* AppDelegate.swift */,
 				D69788DF22D0127D006CAE32 /* ViewController.swift */,
 				D697890D22D01CD0006CAE32 /* Networking */,
@@ -132,8 +141,27 @@
 			children = (
 				D697890E22D01EF5006CAE32 /* NetworkDataLoader.swift */,
 				D697890B22D01395006CAE32 /* NetworkManager.swift */,
+				D697891022D02E0E006CAE32 /* SpotifyAuthManager.swift */,
 			);
 			path = Networking;
+			sourceTree = "<group>";
+		};
+		D697891222D02F9B006CAE32 /* User Interface */ = {
+			isa = PBXGroup;
+			children = (
+				D697891922D0307D006CAE32 /* Extensions */,
+				D697891322D02FB1006CAE32 /* ViewManager.swift */,
+			);
+			path = "User Interface";
+			sourceTree = "<group>";
+		};
+		D697891922D0307D006CAE32 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				D697891522D03011006CAE32 /* UIView+addStyling.swift */,
+				D697891722D03071006CAE32 /* UIView+addSubviews.swift */,
+			);
+			path = Extensions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -266,7 +294,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D697891822D03071006CAE32 /* UIView+addSubviews.swift in Sources */,
+				D697891622D03011006CAE32 /* UIView+addStyling.swift in Sources */,
+				D697891422D02FB1006CAE32 /* ViewManager.swift in Sources */,
 				D697890C22D01395006CAE32 /* NetworkManager.swift in Sources */,
+				D697891122D02E0E006CAE32 /* SpotifyAuthManager.swift in Sources */,
 				D697890F22D01EF5006CAE32 /* NetworkDataLoader.swift in Sources */,
 				D69788E022D0127D006CAE32 /* ViewController.swift in Sources */,
 				D69788DE22D0127D006CAE32 /* AppDelegate.swift in Sources */,
