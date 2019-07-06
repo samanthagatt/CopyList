@@ -44,7 +44,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("There was an error!!", error)
             }
             if let code = code, let _ = state {
-                SpotifyAuthManager().requestRefreshAndAccessTokens(code: code)
+                let manager = SpotifyAuthManager()
+                manager.requestRefreshAndAccessTokens(code: code) { (success, _) in
+                    if success == true {
+                        let tabController = MainTabBarController()
+                        tabController.spotifyAuthManager = manager
+                        self.window?.rootViewController = tabController
+                        self.window?.makeKeyAndVisible()
+                    }
+                }
             }
         }
         

@@ -10,4 +10,10 @@ import Foundation
 
 class SpotifyPlaylistController {
     
+    var playlists: [SpotifyPlaylist]
+    
+    init(playlists: [SpotifyPlaylist]?) {
+        self.playlists = playlists ?? []
+    }
+    
 }

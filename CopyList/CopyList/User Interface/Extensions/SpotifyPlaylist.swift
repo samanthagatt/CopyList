@@ -13,8 +13,8 @@ struct SpotifyPlaylist: Decodable {
     var externalURLs: [String: String]?
     var isCollaborative: Bool?
     var isPublic: Bool?
-    var id: Bool?
-    var images: [String]?
+    var id: String?
+//    var images: [[String: String]]?
     var name: String?
     var owner: SpotifyUser?
     var snapshotID: String?
@@ -28,7 +28,7 @@ struct SpotifyPlaylist: Decodable {
     }
     
     enum CodingKeys: String, CodingKey {
-        case href, id, images, name, owner, tracks, type, uri
+        case href, id, name, owner, tracks, type, uri
         case externalURLs = "external_urls"
         case isCollaborative = "collaborative"
         case isPublic = "public"
