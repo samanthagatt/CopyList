@@ -13,4 +13,5 @@ struct SpotifyUser: Decodable {
     var id: String?
     var type: String?
     var uri: String?
+    var displayName: String?
 }

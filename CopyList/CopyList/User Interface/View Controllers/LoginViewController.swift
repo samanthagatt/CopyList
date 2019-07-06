@@ -35,7 +35,7 @@ class LoginViewController: UIViewController {
     
     @objc func getAccess() {
         let webViewController = WebViewController()
-        webViewController.urlToLoad = SpotifyAuthManager().requestAuthorizationURL
+        webViewController.urlToLoad = SpotifyManager().requestAuthorizationURL
         let navController = UINavigationController(rootViewController: webViewController)
         present(navController, animated: true)
     }

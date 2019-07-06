@@ -14,7 +14,7 @@ struct SpotifyPlaylist: Decodable {
     var isCollaborative: Bool?
     var isPublic: Bool?
     var id: String?
-//    var images: [[String: String]]?
+    var images: [Image]?
     var name: String?
     var owner: SpotifyUser?
     var snapshotID: String?
@@ -25,6 +25,12 @@ struct SpotifyPlaylist: Decodable {
     struct Tracks: Decodable {
         var href: String?
         var total: Int?
+    }
+    
+    struct Image: Decodable {
+        var width: Int?
+        var height: Int?
+        var url: String?
     }
     
     enum CodingKeys: String, CodingKey {

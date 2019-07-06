@@ -10,12 +10,14 @@ import UIKit
 
 class MainTabBarController: UITabBarController {
     
-    var spotifyAuthManager: SpotifyAuthManager? {
+    var spotifyManager: SpotifyManager? {
         didSet {
-            guard let manager = spotifyAuthManager else { return }
+            guard let manager = spotifyManager else { return }
+            spotifyPlaylistsVC.spotifyManager = manager
+            appleMusicPlaylistsVC.spotifyManager = manager
             manager.getPlaylists { (spotifyPlaylists, statusCode, networkError) in
                 print(statusCode ?? "no status code")
-                print(networkError ?? "no networkError")
+                print(networkError ?? "no network error")
                 guard let playlists = spotifyPlaylists else {
                     print("No playlists returned!")
                     return

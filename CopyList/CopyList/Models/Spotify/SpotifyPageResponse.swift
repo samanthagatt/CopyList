@@ -1,5 +1,5 @@
 //
-//  SpotifyPlaylistsResponse.swift
+//  SpotifyPageResponse.swift
 //  CopyList
 //
 //  Created by Samantha Gatt on 7/6/19.
@@ -8,9 +8,9 @@
 
 import Foundation
 
-struct SpotifyPlaylistsResponse: Decodable {
+struct SpotifyPageResponse<T: Decodable>: Decodable {
     var href: String?
-    var items: [SpotifyPlaylist]?
+    var items: [T]?
     var limit: Int?
     var next: String?
     var offset: Int?

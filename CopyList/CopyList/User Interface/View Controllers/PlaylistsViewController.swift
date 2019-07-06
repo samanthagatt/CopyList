@@ -12,6 +12,8 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
     
     static let playlistCellID = "PlaylistCell"
     
+    var spotifyManager: SpotifyManager?
+    
     var spotifyPlaylistController: SpotifyPlaylistController? {
         didSet {
             playlistTableView.reloadData()
@@ -51,5 +53,24 @@ extension TableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: PlaylistsViewController.playlistCellID, for: indexPath)
         cell.textLabel?.text = spotifyPlaylistController?.playlists[indexPath.row].name
         return cell
+    }
+}
+
+private typealias TableViewDelegate = PlaylistsViewController
+extension TableViewDelegate {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let playlist = spotifyPlaylistController?.playlists[indexPath.row]
+        let detailVC = PlaylistDetailViewController()
+        detailVC.navigationItem.title = playlist?.name ?? ""
+        navigationController?.pushViewController(detailVC, animated: true)
+        spotifyManager?.getTracks(in: playlist?.id ?? "", completion: { (spotifyResponse, statusCode, networkError) in
+            print(statusCode ?? "no status code")
+            print(networkError ?? "no network error")
+            guard let response = spotifyResponse else {
+                print("no response")
+                return
+            }
+            detailVC.trackController = SpotifyTrackController(tracks: response.items)
+        })
     }
 }

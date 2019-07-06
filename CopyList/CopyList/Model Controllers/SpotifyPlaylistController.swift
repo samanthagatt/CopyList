@@ -12,8 +12,7 @@ class SpotifyPlaylistController {
     
     var playlists: [SpotifyPlaylist]
     
-    init(playlists: [SpotifyPlaylist]?) {
+    init(playlists: [SpotifyPlaylist]? = nil) {
         self.playlists = playlists ?? []
     }
-    
 }
