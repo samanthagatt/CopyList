@@ -9,11 +9,12 @@
 /* Begin PBXBuildFile section */
 		D69788DE22D0127D006CAE32 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69788DD22D0127D006CAE32 /* AppDelegate.swift */; };
 		D69788E022D0127D006CAE32 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69788DF22D0127D006CAE32 /* ViewController.swift */; };
-		D69788E322D0127D006CAE32 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D69788E122D0127D006CAE32 /* Main.storyboard */; };
 		D69788E522D0127E006CAE32 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = D69788E422D0127E006CAE32 /* Assets.xcassets */; };
 		D69788E822D0127E006CAE32 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D69788E622D0127E006CAE32 /* LaunchScreen.storyboard */; };
 		D69788F322D0127E006CAE32 /* CopyListTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69788F222D0127E006CAE32 /* CopyListTests.swift */; };
 		D69788FE22D0127E006CAE32 /* CopyListUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69788FD22D0127E006CAE32 /* CopyListUITests.swift */; };
+		D697890C22D01395006CAE32 /* NetworkManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D697890B22D01395006CAE32 /* NetworkManager.swift */; };
+		D697890F22D01EF5006CAE32 /* NetworkDataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = D697890E22D01EF5006CAE32 /* NetworkDataLoader.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,7 +38,6 @@
 		D69788DA22D0127D006CAE32 /* CopyList.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CopyList.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		D69788DD22D0127D006CAE32 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		D69788DF22D0127D006CAE32 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
-		D69788E222D0127D006CAE32 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		D69788E422D0127E006CAE32 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		D69788E722D0127E006CAE32 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		D69788E922D0127E006CAE32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -47,6 +47,8 @@
 		D69788F922D0127E006CAE32 /* CopyListUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CopyListUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D69788FD22D0127E006CAE32 /* CopyListUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CopyListUITests.swift; sourceTree = "<group>"; };
 		D69788FF22D0127E006CAE32 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D697890B22D01395006CAE32 /* NetworkManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkManager.swift; sourceTree = "<group>"; };
+		D697890E22D01EF5006CAE32 /* NetworkDataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkDataLoader.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -99,7 +101,7 @@
 			children = (
 				D69788DD22D0127D006CAE32 /* AppDelegate.swift */,
 				D69788DF22D0127D006CAE32 /* ViewController.swift */,
-				D69788E122D0127D006CAE32 /* Main.storyboard */,
+				D697890D22D01CD0006CAE32 /* Networking */,
 				D69788E422D0127E006CAE32 /* Assets.xcassets */,
 				D69788E622D0127E006CAE32 /* LaunchScreen.storyboard */,
 				D69788E922D0127E006CAE32 /* Info.plist */,
@@ -123,6 +125,15 @@
 				D69788FF22D0127E006CAE32 /* Info.plist */,
 			);
 			path = CopyListUITests;
+			sourceTree = "<group>";
+		};
+		D697890D22D01CD0006CAE32 /* Networking */ = {
+			isa = PBXGroup;
+			children = (
+				D697890E22D01EF5006CAE32 /* NetworkDataLoader.swift */,
+				D697890B22D01395006CAE32 /* NetworkManager.swift */,
+			);
+			path = Networking;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -231,7 +242,6 @@
 			files = (
 				D69788E822D0127E006CAE32 /* LaunchScreen.storyboard in Resources */,
 				D69788E522D0127E006CAE32 /* Assets.xcassets in Resources */,
-				D69788E322D0127D006CAE32 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -256,6 +266,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D697890C22D01395006CAE32 /* NetworkManager.swift in Sources */,
+				D697890F22D01EF5006CAE32 /* NetworkDataLoader.swift in Sources */,
 				D69788E022D0127D006CAE32 /* ViewController.swift in Sources */,
 				D69788DE22D0127D006CAE32 /* AppDelegate.swift in Sources */,
 			);
@@ -293,14 +305,6 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
-		D69788E122D0127D006CAE32 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				D69788E222D0127D006CAE32 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		D69788E622D0127E006CAE32 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -432,7 +436,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DNLD6FSL42;
 				INFOPLIST_FILE = CopyList/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -440,6 +446,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.SamanthaGatt.CopyList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -449,7 +456,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = DNLD6FSL42;
 				INFOPLIST_FILE = CopyList/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -457,6 +466,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.SamanthaGatt.CopyList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
