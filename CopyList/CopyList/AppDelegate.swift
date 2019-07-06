@@ -19,6 +19,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.rootViewController = ViewController()
         return true
     }
-
+    
+    func application(_ app: UIApplication, open url: URL, options: [UIApplication.OpenURLOptionsKey : Any] = [:]) -> Bool {
+        guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
+            let queryItems = components.queryItems else { return false }
+        
+        print("URL Path: ", components.path)
+        print("URL Query Items: ", queryItems)
+        return true
+    }
 }
 

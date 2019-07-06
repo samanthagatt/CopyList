@@ -19,6 +19,9 @@
 		D697891422D02FB1006CAE32 /* ViewManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D697891322D02FB1006CAE32 /* ViewManager.swift */; };
 		D697891622D03011006CAE32 /* UIView+addStyling.swift in Sources */ = {isa = PBXBuildFile; fileRef = D697891522D03011006CAE32 /* UIView+addStyling.swift */; };
 		D697891822D03071006CAE32 /* UIView+addSubviews.swift in Sources */ = {isa = PBXBuildFile; fileRef = D697891722D03071006CAE32 /* UIView+addSubviews.swift */; };
+		D697891B22D03B7C006CAE32 /* UIColor+hexToColor.swift in Sources */ = {isa = PBXBuildFile; fileRef = D697891A22D03B7C006CAE32 /* UIColor+hexToColor.swift */; };
+		D697891D22D03CAC006CAE32 /* UIColor+ThemeColors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D697891C22D03CAC006CAE32 /* UIColor+ThemeColors.swift */; };
+		D697892222D04323006CAE32 /* WebViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D697892122D04323006CAE32 /* WebViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,6 +60,9 @@
 		D697891322D02FB1006CAE32 /* ViewManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewManager.swift; sourceTree = "<group>"; };
 		D697891522D03011006CAE32 /* UIView+addStyling.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+addStyling.swift"; sourceTree = "<group>"; };
 		D697891722D03071006CAE32 /* UIView+addSubviews.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+addSubviews.swift"; sourceTree = "<group>"; };
+		D697891A22D03B7C006CAE32 /* UIColor+hexToColor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+hexToColor.swift"; sourceTree = "<group>"; };
+		D697891C22D03CAC006CAE32 /* UIColor+ThemeColors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+ThemeColors.swift"; sourceTree = "<group>"; };
+		D697892122D04323006CAE32 /* WebViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,10 +113,10 @@
 		D69788DC22D0127D006CAE32 /* CopyList */ = {
 			isa = PBXGroup;
 			children = (
-				D697891222D02F9B006CAE32 /* User Interface */,
 				D69788DD22D0127D006CAE32 /* AppDelegate.swift */,
-				D69788DF22D0127D006CAE32 /* ViewController.swift */,
+				D697891F22D03EAC006CAE32 /* Models */,
 				D697890D22D01CD0006CAE32 /* Networking */,
+				D697891222D02F9B006CAE32 /* User Interface */,
 				D69788E422D0127E006CAE32 /* Assets.xcassets */,
 				D69788E622D0127E006CAE32 /* LaunchScreen.storyboard */,
 				D69788E922D0127E006CAE32 /* Info.plist */,
@@ -149,8 +155,9 @@
 		D697891222D02F9B006CAE32 /* User Interface */ = {
 			isa = PBXGroup;
 			children = (
-				D697891922D0307D006CAE32 /* Extensions */,
 				D697891322D02FB1006CAE32 /* ViewManager.swift */,
+				D697891922D0307D006CAE32 /* Extensions */,
+				D697891E22D03E82006CAE32 /* View Controllers */,
 			);
 			path = "User Interface";
 			sourceTree = "<group>";
@@ -160,8 +167,34 @@
 			children = (
 				D697891522D03011006CAE32 /* UIView+addStyling.swift */,
 				D697891722D03071006CAE32 /* UIView+addSubviews.swift */,
+				D697891A22D03B7C006CAE32 /* UIColor+hexToColor.swift */,
+				D697891C22D03CAC006CAE32 /* UIColor+ThemeColors.swift */,
 			);
 			path = Extensions;
+			sourceTree = "<group>";
+		};
+		D697891E22D03E82006CAE32 /* View Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				D69788DF22D0127D006CAE32 /* ViewController.swift */,
+				D697892122D04323006CAE32 /* WebViewController.swift */,
+			);
+			path = "View Controllers";
+			sourceTree = "<group>";
+		};
+		D697891F22D03EAC006CAE32 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				D697892022D03EB2006CAE32 /* Spotify Auth */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		D697892022D03EB2006CAE32 /* Spotify Auth */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Spotify Auth";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -295,6 +328,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				D697891822D03071006CAE32 /* UIView+addSubviews.swift in Sources */,
+				D697892222D04323006CAE32 /* WebViewController.swift in Sources */,
+				D697891D22D03CAC006CAE32 /* UIColor+ThemeColors.swift in Sources */,
+				D697891B22D03B7C006CAE32 /* UIColor+hexToColor.swift in Sources */,
 				D697891622D03011006CAE32 /* UIView+addStyling.swift in Sources */,
 				D697891422D02FB1006CAE32 /* ViewManager.swift in Sources */,
 				D697890C22D01395006CAE32 /* NetworkManager.swift in Sources */,

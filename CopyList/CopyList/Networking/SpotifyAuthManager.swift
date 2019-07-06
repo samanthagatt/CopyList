@@ -10,4 +10,9 @@ import Foundation
 
 class SpotifyAuthManager {
     
+    static let baseURLString = "https://accounts.spotify.com/authorize"
+    
+    var requestAuthorizationURL: URL? = {
+        return NetworkManager.shared.constructURL(baseURLString: SpotifyAuthManager.baseURLString, queries: ["client_id": "a0963aaca7e54546a0a4f21dc9fac7a1", "response_type": "code", "redirect_uri": "com.samanthagatt.copylist://oauth/spotify/", "state": "this is the stateeeee"])
+    }()
 }
