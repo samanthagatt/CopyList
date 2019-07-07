@@ -15,7 +15,7 @@ class SpotifyManager {
     var accessToken: String?
     
     var requestAuthorizationURL: URL? = {
-        return NetworkManager.shared.constructURL(baseURLString: SpotifyManager.baseURLString, appendingPaths: ["authorize"], queries: ["client_id": clientID, "response_type": "code", "redirect_uri": redirectURI, "state": "this is the stateeeee", "scope": "playlist-read-private playlist-read-collaborative"])
+        return NetworkManager.shared.constructURL(baseURLString: SpotifyManager.baseURLString, appendingPaths: ["authorize"], queries: ["client_id": clientID, "response_type": "code", "redirect_uri": redirectURI, "state": "this is the stateeeee", "show_dialog": "true", "scope": "playlist-read-private playlist-read-collaborative"])
     }()
     
     func requestRefreshAndAccessTokens(code: String, completion: @escaping (Bool?, Int?) -> Void) {
@@ -37,8 +37,24 @@ class SpotifyManager {
         }
     }
     
-    func refreshAccessToken() {
-        
+    func refreshAccessToken(_ refreshToken: String, completion: @escaping (Bool?, Int?) -> Void) {
+        NetworkManager.shared.makeRequest(method: .post, baseURLString: SpotifyManager.baseURLString, appendingPaths: ["api", "token"], bodyForFormEncoding: ["grant_type": "refresh_token", "refresh_token": refreshToken, "redirect_uri": redirectURI, "client_id": clientID, "client_secret": clientSecret]) { (tokens: AccessAndRefreshTokenResponse?, statusCode, networkError) in
+            if let error = networkError {
+                print(error)
+                completion(false, statusCode)
+                return
+            }
+            guard let tokens = tokens,
+                let accessToken = tokens.accessToken else {
+                    completion(false, statusCode)
+                    return
+            }
+            self.accessToken = accessToken
+            if let refreshToken = tokens.refreshToken {
+                KeychainManager.save(refreshToken, for: spotifyRefreshKey)
+            }
+            completion(true, statusCode)
+        }
     }
     
     func getPlaylists(completion: @escaping (SpotifyPageResponse<SpotifyPlaylist>?, Int?, NetworkManager.NetworkError?) -> Void) {

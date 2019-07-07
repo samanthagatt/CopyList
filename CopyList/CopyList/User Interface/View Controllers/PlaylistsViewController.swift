@@ -34,6 +34,10 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
         
         view.backgroundColor = .white
         
+        let barButtonItem = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(logOut))
+        barButtonItem.tintColor = .red
+        navigationItem.leftBarButtonItem = barButtonItem
+        
         view.addSubview(playlistTableView)
         NSLayoutConstraint.activate([
             playlistTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -41,6 +45,19 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
             playlistTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             playlistTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor)
         ])
+    }
+    
+    @objc func logOut() {
+        let alertController = UIAlertController(title: "Log out", message: "Are you sure you'd like to log out?", preferredStyle: .alert)
+        let logOutAction = UIAlertAction(title: "Log out", style: .destructive) { _ in
+            KeychainManager.delete(spotifyRefreshKey)
+            self.spotifyManager?.accessToken = nil
+            self.present(LoginViewController(), animated: true)
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        alertController.addAction(logOutAction)
+        present(alertController, animated: true)
     }
 }
 
@@ -63,7 +80,7 @@ extension TableViewDelegate {
         let detailVC = PlaylistDetailViewController()
         detailVC.navigationItem.title = playlist?.name ?? ""
         navigationController?.pushViewController(detailVC, animated: true)
-        spotifyManager?.getTracks(in: playlist?.id ?? "", completion: { (spotifyResponse, statusCode, networkError) in
+        spotifyManager?.getTracks(in: playlist?.id ?? "") { (spotifyResponse, statusCode, networkError) in
             print(statusCode ?? "no status code")
             print(networkError ?? "no network error")
             guard let response = spotifyResponse else {
@@ -71,6 +88,6 @@ extension TableViewDelegate {
                 return
             }
             detailVC.trackController = SpotifyTrackController(tracks: response.items)
-        })
+        }
     }
 }

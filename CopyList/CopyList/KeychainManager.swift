@@ -50,4 +50,9 @@ enum KeychainManager {
             }
         }
     }
+    
+    static func delete(_ key: String) {
+        let query = makeQuery(for: key)
+        SecItemDelete(query)
+    }
 }

@@ -16,7 +16,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
-        window?.rootViewController = LoginViewController()
+        if let refreshToken = KeychainManager.get(spotifyRefreshKey) {
+            let tabController = MainTabBarController()
+            let spotifyManager = SpotifyManager()
+            spotifyManager.refreshAccessToken(refreshToken) { (success, statusCode) in
+                print(statusCode ?? "no statusCode")
+                tabController.spotifyManager = spotifyManager
+            }
+            window?.rootViewController = tabController
+        } else {
+            window?.rootViewController = LoginViewController()
+        }
         return true
     }
     
@@ -55,7 +65,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 }
             }
         }
-        
         return true
     }
 }
