@@ -20,6 +20,12 @@ class WebViewController: UIViewController, WKNavigationDelegate {
         return webView
     }()
     
+    lazy var progressView: UIProgressView = {
+        let progressView = UIProgressView(progressViewStyle: .default)
+        progressView.translatesAutoresizingMaskIntoConstraints = false
+        return progressView
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -29,23 +35,58 @@ class WebViewController: UIViewController, WKNavigationDelegate {
         setupView()
     }
     
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        webView.addObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress), options: .new, context: nil)
+    }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        super.viewDidDisappear(animated)
+        
+        webView.removeObserver(self, forKeyPath: #keyPath(WKWebView.estimatedProgress))
+    }
+    
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
+        if keyPath == #keyPath(WKWebView.estimatedProgress) {
+            progressView.progress = Float(webView.estimatedProgress)
+        }
+    }
+    
     private func setupView() {
         view.backgroundColor = .white
         
         let cancelBarButton = UIBarButtonItem(barButtonSystemItem: .cancel, target: self, action: #selector(dismissViewController))
         navigationItem.rightBarButtonItem = cancelBarButton
         
-        view.addSubview(webView)
+        view.addSubviews(webView, progressView)
         NSLayoutConstraint.activate([
             webView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
             webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             webView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             webView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            
+            progressView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            progressView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            progressView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            progressView.heightAnchor.constraint(equalToConstant: 3)
         ])
     }
     
     @objc func dismissViewController() {
         dismiss(animated: true)
+    }
+    
+    private func showProgressView() {
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
+            self.progressView.alpha = 1
+        }, completion: nil)
+    }
+    
+    private func hideProgressView() {
+        UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
+            self.progressView.alpha = 0
+        }, completion: nil)
     }
 }
 
@@ -64,5 +105,17 @@ extension WebViewNavigationDelegate {
         } else {
             decisionHandler(.allow)
         }
+    }
+    
+    func webView(_ webView: WKWebView, didStartProvisionalNavigation navigation: WKNavigation!) {
+        showProgressView()
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        hideProgressView()
+    }
+    
+    func webView(_ webView: WKWebView, didFail navigation: WKNavigation!, withError error: Error) {
+        hideProgressView()
     }
 }
