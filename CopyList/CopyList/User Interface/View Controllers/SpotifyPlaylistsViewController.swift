@@ -1,5 +1,5 @@
 //
-//  PlaylistsViewController.swift
+//  SpotifyPlaylistsViewController.swift
 //  CopyList
 //
 //  Created by Samantha Gatt on 7/6/19.
@@ -8,9 +8,9 @@
 
 import UIKit
 
-class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SpotifyPlaylistsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    static let playlistCellID = "PlaylistCell"
+    static let playlistCellID = "SpotifyPlaylistCell"
     
     var spotifyManager: SpotifyManager?
     
@@ -22,7 +22,7 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
     
     lazy var playlistTableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: PlaylistsViewController.playlistCellID)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: SpotifyPlaylistsViewController.playlistCellID)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -61,23 +61,23 @@ class PlaylistsViewController: UIViewController, UITableViewDelegate, UITableVie
     }
 }
 
-private typealias TableViewDataSource = PlaylistsViewController
+private typealias TableViewDataSource = SpotifyPlaylistsViewController
 extension TableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return spotifyPlaylistController?.playlists.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: PlaylistsViewController.playlistCellID, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: SpotifyPlaylistsViewController.playlistCellID, for: indexPath)
         cell.textLabel?.text = spotifyPlaylistController?.playlists[indexPath.row].name
         return cell
     }
 }
 
-private typealias TableViewDelegate = PlaylistsViewController
+private typealias TableViewDelegate = SpotifyPlaylistsViewController
 extension TableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let playlist = spotifyPlaylistController?.playlists[indexPath.row]
-        let detailVC = PlaylistDetailViewController()
+        let detailVC = SpotifyPlaylistDetailViewController()
         detailVC.navigationItem.title = playlist?.name ?? ""
         navigationController?.pushViewController(detailVC, animated: true)
         spotifyManager?.getTracks(in: playlist?.id ?? "") { (spotifyResponse, statusCode, networkError) in

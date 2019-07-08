@@ -45,18 +45,7 @@ class LoginViewController: UIViewController {
         super.viewDidAppear(animated)
         
         MPMediaLibrary.requestAuthorization { status in
-            if status == .authorized {
-                let query = MPMediaQuery.playlists()
-                for playlist in query.collections ?? [] {
-                    print(playlist.value(forProperty: MPMediaPlaylistPropertyName)!)
-                    
-                    let songs = playlist.items
-                    for song in songs {
-                        let songTitle = song.value(forProperty: MPMediaItemPropertyTitle)
-                        print("\t\t", songTitle!)
-                    }
-                }
-            } else {
+            if status != .authorized {
                 let alertController = UIAlertController(title: "Uh oh", message: "CopyList requires access to the music on your divice in order to work. You can allow the app access by going to Settings -> Privacy -> Media & Apple Music", preferredStyle: .alert)
                 let action = UIAlertAction(title: "Okay", style: .default, handler: nil)
                 alertController.addAction(action)

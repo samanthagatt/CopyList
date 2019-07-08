@@ -1,5 +1,5 @@
 //
-//  PlaylistDetailViewController.swift
+//  SpotifyPlaylistDetailViewController.swift
 //  CopyList
 //
 //  Created by Samantha Gatt on 7/6/19.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PlaylistDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
+class SpotifyPlaylistDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     var trackController: SpotifyTrackController? {
         didSet {
@@ -18,7 +18,7 @@ class PlaylistDetailViewController: UIViewController, UITableViewDelegate, UITab
     
     lazy var tracksTableView: UITableView = {
         let tableView = UITableView()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: PlaylistsViewController.playlistCellID)
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: SpotifyPlaylistsViewController.playlistCellID)
         tableView.delegate = self
         tableView.dataSource = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -29,7 +29,7 @@ class PlaylistDetailViewController: UIViewController, UITableViewDelegate, UITab
         super.viewDidLoad()
         
         view.backgroundColor = .white
-        
+                
         view.addSubview(tracksTableView)
         NSLayoutConstraint.activate([
             tracksTableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -40,13 +40,13 @@ class PlaylistDetailViewController: UIViewController, UITableViewDelegate, UITab
     }
 }
 
-private typealias TableViewDataSource = PlaylistDetailViewController
+private typealias TableViewDataSource = SpotifyPlaylistDetailViewController
 extension TableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return trackController?.tracks.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: PlaylistsViewController.playlistCellID, for: indexPath)
+        let cell = tableView.dequeueReusableCell(withIdentifier: SpotifyPlaylistsViewController.playlistCellID, for: indexPath)
         cell.textLabel?.text = trackController?.tracks[indexPath.row].track?.name
         return cell
     }

@@ -28,13 +28,13 @@ class MainTabBarController: UITabBarController {
         }
     }
     
-    let spotifyPlaylistsVC: PlaylistsViewController = {
-        let vc = PlaylistsViewController()
+    let spotifyPlaylistsVC: SpotifyPlaylistsViewController = {
+        let vc = SpotifyPlaylistsViewController()
         vc.navigationItem.title = "Your Spotify Playlists"
         return vc
     }()
-    let appleMusicPlaylistsVC: PlaylistsViewController = {
-        let vc = PlaylistsViewController()
+    let appleMusicPlaylistsVC: ApplePlaylistsViewController = {
+        let vc = ApplePlaylistsViewController()
         vc.navigationItem.title = "Your Apple Playlists"
         return vc
     }()
