@@ -7,17 +7,15 @@
 //
 
 import UIKit
-import MediaPlayer
+import StoreKit
 
 class ApplePlaylistsViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
     static let playlistCellID = "ApplePlaylistCell"
     
-    var spotifyManager: SpotifyManager?
+    var appleMusicManager = AppleMusicManager()
     
-    var playlists: [MPMediaItemCollection] = {
-        return MPMediaQuery.playlists().collections ?? []
-    }() {
+    var applePlaylistController: ApplePlaylistController? {
         didSet {
             playlistTableView.reloadData()
         }
@@ -28,6 +26,7 @@ class ApplePlaylistsViewController: UIViewController, UITableViewDelegate, UITab
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: ApplePlaylistsViewController.playlistCellID)
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.contentInsetAdjustmentBehavior = .never
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
@@ -37,9 +36,20 @@ class ApplePlaylistsViewController: UIViewController, UITableViewDelegate, UITab
         
         view.backgroundColor = .white
         
-        let barButtonItem = UIBarButtonItem(title: "Log out", style: .plain, target: self, action: #selector(logOut))
-        barButtonItem.tintColor = .red
-        navigationItem.leftBarButtonItem = barButtonItem
+        appleMusicManager.getUserToken { (success, error) in
+            if success {
+                self.appleMusicManager.getPlaylists(completion: { (playlists, statusCode, networkError) in
+                    if let playlists = playlists {
+                        self.applePlaylistController = ApplePlaylistController(playlists: playlists)
+                    }
+                })
+            } else {
+                let alertController = UIAlertController(title: "Uh oh", message: "CopyList requires access to the music on your divice in order to work. You can allow the app access by going to Settings -> Privacy -> Media & Apple Music", preferredStyle: .alert)
+                let action = UIAlertAction(title: "Okay", style: .default, handler: nil)
+                alertController.addAction(action)
+                self.present(alertController, animated: true)
+            }
+        }
         
         view.addSubview(playlistTableView)
         NSLayoutConstraint.activate([
@@ -47,31 +57,18 @@ class ApplePlaylistsViewController: UIViewController, UITableViewDelegate, UITab
             playlistTableView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
             playlistTableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
             playlistTableView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor)
-            ])
-    }
-    
-    @objc func logOut() {
-        let alertController = UIAlertController(title: "Log out", message: "Are you sure you'd like to log out?", preferredStyle: .alert)
-        let logOutAction = UIAlertAction(title: "Log out", style: .destructive) { _ in
-            KeychainManager.delete(spotifyRefreshKey)
-            self.spotifyManager?.accessToken = nil
-            self.present(LoginViewController(), animated: true)
-        }
-        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
-        alertController.addAction(cancelAction)
-        alertController.addAction(logOutAction)
-        present(alertController, animated: true)
+        ])
     }
 }
 
 private typealias TableViewDataSource = ApplePlaylistsViewController
 extension TableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return playlists.count
+        return applePlaylistController?.playlists.count ?? 0
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ApplePlaylistsViewController.playlistCellID, for: indexPath)
-        cell.textLabel?.text = playlists[indexPath.row].value(forProperty: MPMediaPlaylistPropertyName) as? String
+        cell.textLabel?.text = applePlaylistController?.playlists[indexPath.row].attributes?.name
         return cell
     }
 }

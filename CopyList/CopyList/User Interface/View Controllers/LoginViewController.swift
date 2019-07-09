@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import WebKit
 import MediaPlayer
 
 class LoginViewController: UIViewController {
@@ -39,19 +38,6 @@ class LoginViewController: UIViewController {
         webViewController.urlToLoad = SpotifyManager().requestAuthorizationURL
         let navController = UINavigationController(rootViewController: webViewController)
         present(navController, animated: true)
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        
-        MPMediaLibrary.requestAuthorization { status in
-            if status != .authorized {
-                let alertController = UIAlertController(title: "Uh oh", message: "CopyList requires access to the music on your divice in order to work. You can allow the app access by going to Settings -> Privacy -> Media & Apple Music", preferredStyle: .alert)
-                let action = UIAlertAction(title: "Okay", style: .default, handler: nil)
-                alertController.addAction(action)
-                self.present(alertController, animated: true)
-            }
-        }
     }
 }
 

@@ -39,6 +39,10 @@
 		D69789AE22D1521D006CAE32 /* SpotifyPlaylistDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69789AD22D1521D006CAE32 /* SpotifyPlaylistDetailViewController.swift */; };
 		D69789B022D15313006CAE32 /* SpotifyTrackController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69789AF22D15313006CAE32 /* SpotifyTrackController.swift */; };
 		D69789B222D3ED57006CAE32 /* ApplePlaylistsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69789B122D3ED57006CAE32 /* ApplePlaylistsViewController.swift */; };
+		D69789B422D41D51006CAE32 /* Artwork.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69789B322D41D51006CAE32 /* Artwork.swift */; };
+		D69789B722D41D9F006CAE32 /* ApplePlaylist.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69789B622D41D9F006CAE32 /* ApplePlaylist.swift */; };
+		D69789B922D41F83006CAE32 /* ApplePlaylistController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69789B822D41F83006CAE32 /* ApplePlaylistController.swift */; };
+		D69789BB22D420F5006CAE32 /* AppleMusicManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D69789BA22D420F5006CAE32 /* AppleMusicManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -97,6 +101,10 @@
 		D69789AD22D1521D006CAE32 /* SpotifyPlaylistDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyPlaylistDetailViewController.swift; sourceTree = "<group>"; };
 		D69789AF22D15313006CAE32 /* SpotifyTrackController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpotifyTrackController.swift; sourceTree = "<group>"; };
 		D69789B122D3ED57006CAE32 /* ApplePlaylistsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplePlaylistsViewController.swift; sourceTree = "<group>"; };
+		D69789B322D41D51006CAE32 /* Artwork.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Artwork.swift; sourceTree = "<group>"; };
+		D69789B622D41D9F006CAE32 /* ApplePlaylist.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplePlaylist.swift; sourceTree = "<group>"; };
+		D69789B822D41F83006CAE32 /* ApplePlaylistController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplePlaylistController.swift; sourceTree = "<group>"; };
+		D69789BA22D420F5006CAE32 /* AppleMusicManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppleMusicManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +193,7 @@
 				D697890E22D01EF5006CAE32 /* NetworkDataLoader.swift */,
 				D697890B22D01395006CAE32 /* NetworkManager.swift */,
 				D697891022D02E0E006CAE32 /* SpotifyManager.swift */,
+				D69789BA22D420F5006CAE32 /* AppleMusicManager.swift */,
 			);
 			path = Networking;
 			sourceTree = "<group>";
@@ -227,6 +236,8 @@
 		D697891F22D03EAC006CAE32 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D69789B322D41D51006CAE32 /* Artwork.swift */,
+				D69789B522D41D83006CAE32 /* Apple */,
 				D697899A22D149D9006CAE32 /* Spotify */,
 			);
 			path = Models;
@@ -237,6 +248,7 @@
 			children = (
 				D697898D22D1270E006CAE32 /* SpotifyPlaylistController.swift */,
 				D69789AF22D15313006CAE32 /* SpotifyTrackController.swift */,
+				D69789B822D41F83006CAE32 /* ApplePlaylistController.swift */,
 			);
 			path = "Model Controllers";
 			sourceTree = "<group>";
@@ -254,6 +266,14 @@
 				D69789A922D14E2F006CAE32 /* SpotifySimplifiedArtist.swift */,
 			);
 			path = Spotify;
+			sourceTree = "<group>";
+		};
+		D69789B522D41D83006CAE32 /* Apple */ = {
+			isa = PBXGroup;
+			children = (
+				D69789B622D41D9F006CAE32 /* ApplePlaylist.swift */,
+			);
+			path = Apple;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -386,18 +406,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D69789BB22D420F5006CAE32 /* AppleMusicManager.swift in Sources */,
 				D69789A222D149D9006CAE32 /* SpotifyPlaylistTrack.swift in Sources */,
 				D697891822D03071006CAE32 /* UIView+addSubviews.swift in Sources */,
+				D69789B722D41D9F006CAE32 /* ApplePlaylist.swift in Sources */,
 				D69789A822D149D9006CAE32 /* AccessAndRefreshTokenResponse.swift in Sources */,
 				D69789AA22D14E2F006CAE32 /* SpotifySimplifiedArtist.swift in Sources */,
 				D697897F22D10680006CAE32 /* confidential.swift in Sources */,
 				D697892222D04323006CAE32 /* WebViewController.swift in Sources */,
 				D697891D22D03CAC006CAE32 /* UIColor+ThemeColors.swift in Sources */,
+				D69789B422D41D51006CAE32 /* Artwork.swift in Sources */,
 				D697891B22D03B7C006CAE32 /* UIColor+hexToColor.swift in Sources */,
 				D697891622D03011006CAE32 /* UIView+addStyling.swift in Sources */,
 				D697891422D02FB1006CAE32 /* ViewManager.swift in Sources */,
 				D69789A722D149D9006CAE32 /* SpotifyTrack.swift in Sources */,
 				D697898522D11D2E006CAE32 /* UIImage+AppImages.swift in Sources */,
+				D69789B922D41F83006CAE32 /* ApplePlaylistController.swift in Sources */,
 				D697890C22D01395006CAE32 /* NetworkManager.swift in Sources */,
 				D69789AC22D15125006CAE32 /* SpotifySimplifiedAlbum.swift in Sources */,
 				D69789A322D149D9006CAE32 /* SpotifyUser.swift in Sources */,

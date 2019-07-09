@@ -106,8 +106,6 @@ class NetworkManager {
         // TODO: Complete this
     }
     
-    
-    
     func getImage(url: URL, completion: @escaping NetworkCompletion<UIImage>) {
         dataLoader.loadData(with: url) { (data, response, error) in
             DispatchQueue.main.async {

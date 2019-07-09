@@ -14,7 +14,6 @@ class MainTabBarController: UITabBarController {
         didSet {
             guard let manager = spotifyManager else { return }
             spotifyPlaylistsVC.spotifyManager = manager
-            appleMusicPlaylistsVC.spotifyManager = manager
             manager.getPlaylists { (spotifyPlaylists, statusCode, networkError) in
                 print(statusCode ?? "no status code")
                 print(networkError ?? "no network error")
