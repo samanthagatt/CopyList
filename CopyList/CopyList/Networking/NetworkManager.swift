@@ -103,7 +103,14 @@ class NetworkManager {
     }
     
     func makeRequest<E: Encodable, D: Decodable>(method: NetworkManager.Method = .get, baseURLString: String, appendingPaths: [String] = [], queries: [String: String] = [:], headers: [String: String] = [:], body: E, completion: @escaping NetworkCompletion<D>) {
-        // TODO: Complete this
+        let bodyData: Data
+        do {
+            bodyData = try JSONEncoder().encode(body)
+        } catch {
+            completion(nil, nil, .encodingBody(error: error))
+            return
+        }
+        makeRequest(method: method, baseURLString: baseURLString, appendingPaths: appendingPaths, queries: queries, headers: headers, encodedData: bodyData, completion: completion)
     }
     
     func getImage(url: URL, completion: @escaping NetworkCompletion<UIImage>) {

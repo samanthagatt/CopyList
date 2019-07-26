@@ -25,6 +25,7 @@ class SpotifyPlaylistsViewController: UIViewController, UITableViewDelegate, UIT
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: SpotifyPlaylistsViewController.playlistCellID)
         tableView.delegate = self
         tableView.dataSource = self
+        tableView.contentInsetAdjustmentBehavior = .never
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
