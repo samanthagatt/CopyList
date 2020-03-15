@@ -9,15 +9,18 @@
 import UIKit
 
 class NetworkManager {
+    /// Default network manager with no unique configurations
+    static let shared = NetworkManager()
     
-    typealias NetworkCompletion<T> = (T?, Int?, NetworkError?) -> Void
+    /// Session used for all network calls
+    private var session: URLSession
     
-    let dataLoader: NetworkDataLoader
-    init(dataLoader: NetworkDataLoader) {
-        self.dataLoader = dataLoader
+    init(headers: [String: String] = [:], session: URLSession = URLSession.shared) {
+        self.session = session
+        session.configuration.httpAdditionalHeaders = headers
     }
-    static let shared = NetworkManager(dataLoader: URLSession.shared)
     
+    /// HTTP Methods
     enum Method: String {
         case get = "GET"
         case put = "PUT"
@@ -25,130 +28,202 @@ class NetworkManager {
         case delete = "DELETE"
     }
     
+    /// Common errors found while trying to execute network requests
     enum NetworkError: Error {
         case constructingURLFailed
         case noDataReturned
-        case decodingData(error: Error)
-        case encodingBody(error: Error)
-        case badURL
-        case dataTaskError(nsError: NSError)
-        
-        init?(dataTaskError: Error?) {
-            if let error = dataTaskError {
-                self = .dataTaskError(nsError: error as NSError)
-            } else {
-                return nil
-            }
-        }
+        case noNetworkResponse
+        case decodingDataFailed(error: Error)
+        case dataTaskError(error: NSError)
+        case responseError(response: HTTPURLResponse)
     }
     
-    func constructURL(baseURLString: String, appendingPaths: [String] = [], queries: [String: String] = [:]) -> URL? {
+    /// Constructs a URL from the components passed in
+    /// - Parameter baseURLString: The starting url for your network call as a string
+    /// - Parameter appendingPaths: An array of the paths to append to the end of the base url in order
+    /// - Parameter queries: A dictionary of query keys and values to be appended to the end of the final url
+    /// - Returns: The constructed URL as an optional
+    static func constructURL(baseURLString: String, appendingPaths: [String] = [], queries: [String: String] = [:]) -> URL? {
+        
+        // Creates base url from string
         guard var url = URL(string: baseURLString) else { return nil }
+        // Appends all paths
         for path in appendingPaths {
             url.appendPathComponent(path)
         }
-        var queryArray: [URLQueryItem] = []
+        // Starts empty query array
+        var queryArray = [URLQueryItem]()
+        // Creates and adds queries to query array from passed in query dictionary
         for query in queries {
             queryArray.append(URLQueryItem(name: query.key, value: query.value))
         }
-        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: true)
-        urlComponents?.queryItems = queryArray.isEmpty ? nil : queryArray
+        // Converts url into components
+        var urlComponents = URLComponents(url: url, resolvingAgainstBaseURL: false)
+        // Adds query array to url components
+        if queryArray.count > 0 {
+            urlComponents?.queryItems = queryArray
+        }
+        // Returns final constructed url
         return urlComponents?.url
     }
     
-    func dataTask<D: Decodable>(request: URLRequest, completion: @escaping NetworkCompletion<D>) {
-        dataLoader.loadData(with: request) { (data, response, error) in
-            DispatchQueue.main.async {
-                let responseCode = (response as? HTTPURLResponse)?.statusCode
-                let networkError = NetworkError(dataTaskError: error)
-                guard let data = data else {
-                    completion(nil, responseCode, networkError)
-                    return
-                }
-                let decodedData: D
-                do {
-                    let decoder = JSONDecoder()
-                    decoder.keyDecodingStrategy = .convertFromSnakeCase
-                    decodedData = try decoder.decode(D.self, from: data)
-                } catch let decodeError {
-                    completion(nil, responseCode, .decodingData(error: decodeError))
-                    return
-                }
-                completion(decodedData, responseCode, networkError)
-            }
-        }
-    }
-    
-    /// Generic method that makes a network request and decodes data into specified type (from JSON)
-    func makeRequest<D: Decodable>(method: NetworkManager.Method = .get, baseURLString: String, appendingPaths: [String] = [], queries: [String: String] = [:], headers: [String: String] = [:], encodedData: Data? = nil, completion: @escaping NetworkCompletion<D>) {
-        guard let url = constructURL(baseURLString: baseURLString, appendingPaths: appendingPaths, queries: queries) else {
-            completion(nil, nil, .constructingURLFailed)
-            return
-        }
-        var request = URLRequest(url: url)
-        request.httpMethod = method.rawValue
-        for header in headers {
-            request.addValue(header.value, forHTTPHeaderField: header.key)
-        }
-        request.httpBody = encodedData
-        dataTask(request: request, completion: completion)
-    }
-    
-    /// Form encodes body from dictionary and makes network request
-    func makeRequest<D: Decodable>(method: NetworkManager.Method = .get, baseURLString: String, appendingPaths: [String] = [], queries: [String: String] = [:], headers: [String: String] = [:], bodyForFormEncoding: [String: String], completion: @escaping NetworkCompletion<D>) {
-        var newHeaders = headers
-        newHeaders["Content-Type"] = "application/x-www-form-urlencoded"
-        let body = formEncode(bodyForFormEncoding)
-        makeRequest(method: method, baseURLString: baseURLString, appendingPaths: appendingPaths, queries: queries, headers: newHeaders, encodedData: body, completion: completion)
-    }
-    
-    func makeRequest<E: Encodable, D: Decodable>(method: NetworkManager.Method = .get, baseURLString: String, appendingPaths: [String] = [], queries: [String: String] = [:], headers: [String: String] = [:], body: E, completion: @escaping NetworkCompletion<D>) {
-        let bodyData: Data
-        do {
-            bodyData = try JSONEncoder().encode(body)
-        } catch {
-            completion(nil, nil, .encodingBody(error: error))
-            return
-        }
-        makeRequest(method: method, baseURLString: baseURLString, appendingPaths: appendingPaths, queries: queries, headers: headers, encodedData: bodyData, completion: completion)
-    }
-    
-    func getImage(url: URL, completion: @escaping NetworkCompletion<UIImage>) {
-        dataLoader.loadData(with: url) { (data, response, error) in
-            DispatchQueue.main.async {
-                let responseCode = (response as? HTTPURLResponse)?.statusCode
-                let networkError = NetworkError(dataTaskError: error)
-                guard let data = data else {
-                    completion(nil, responseCode, networkError)
-                    return
-                }
-                let image = UIImage(data: data)
-                completion(image, responseCode, networkError)
-            }
-        }
-    }
-    
-    func getImage(urlString: String, completion: @escaping NetworkCompletion<UIImage>) {
-        guard let url = URL(string: urlString) else {
-            completion(nil, nil, .badURL)
-            return
-        }
-        getImage(url: url, completion: completion)
-    }
-    
-    private func percentEscape(_ string: String) -> String? {
-        var characterSet = CharacterSet.alphanumerics
+    /// Percent escapes the provided string
+    /// - Parameter string: The string to be percent escaped
+    /// - Returns: The percent escaped string
+    private static func percentEscape(_ string: String) -> String? {
+        var characterSet: CharacterSet = .alphanumerics
         characterSet.insert(charactersIn: "-._* ")
         return string
             .addingPercentEncoding(withAllowedCharacters: characterSet)?
             .replacingOccurrences(of: " ", with: "+")
     }
     
-    private func formEncode(_ parameters: [String : String]) -> Data? {
+    /// Percent escapes and form encodes the provided dictionary
+    /// - Parameter parameters: The parameters to be form encoded
+    /// - Returns: The form encoded parameters
+    /// to be used in network request body
+    static func formEncode(_ parameters: [String : String]) -> Data? {
         let parameterArray = parameters.compactMap { (key, value) -> String? in
-            guard let escapedValue = percentEscape(value) else { return nil }
+            guard let escapedValue = Self.percentEscape(value) else { return nil }
             return "\(key)=\(escapedValue)"
         }
-        return parameterArray.joined(separator: "&").data(using: String.Encoding.utf8)
+        return parameterArray.joined(separator: "&").data(using: .utf8)
+    }
+    
+    /// Constructs a URLRequest from the parameters passed in
+    /// - Parameter method: The desired HTTP method for the request
+    /// - Parameter url: The url to send the the request
+    /// - Parameter headers: The headers as a dictionary to attach to the request
+    /// - Parameter encodedData: The data to attach to the body of the request
+    /// - Returns: The constructed URLRequest
+    static func constructRequest(method: Method = .get, url: URL, headers: [String: String] = [:], encodedData: Data? = nil) -> URLRequest {
+        
+        var request = URLRequest(url: url)
+        request.httpMethod = method.rawValue
+        for header in headers {
+            request.addValue(header.value, forHTTPHeaderField: header.key)
+        }
+        request.httpBody = encodedData
+        return request
+    }
+    
+    /// Performs a network call and
+    /// decodes data into generic decodable types T and E
+    /// (T on success and E on failure)
+    ///
+    /// If no data is expected to be returned, declare success closure's parameter as type `Data`
+    ///
+    /// - Parameter request: The network request to perform
+    /// - Parameter decoder: Used to decode data returned from network call .
+    /// Defaults to a new instance of `JSONDecoder`.
+    /// - Parameter success: Closure that will be run after a successful network call
+    /// - Parameter response: The decoded data returned from the network call
+    /// - Parameter failure: Closure that will be run after a failed network call
+    /// - Parameter error: The reason the network request failed
+    /// as an instance of `NetworkManager.NetworkError` enum
+    /// - Parameter errorResponse: The optional decoded data returned from the network call
+    ///
+    /// - Returns: The data task that was performed as a discardable result
+    @discardableResult
+    func makeRequest<T: Decodable, E: Decodable>(request: URLRequest, decoder: JSONDecoder = JSONDecoder(), success: @escaping (_ response: T) -> Void, failure: @escaping (_ error: NetworkError, _ errorResponse: E?) -> Void) -> URLSessionDataTask {
+        // Makes data task
+        let dataTask = session.dataTask(with: request) { data, response, error in
+            // Decodes data from network call into E if E is not Data
+            // So it can be passed into failure closure
+            let errorResponse = E.self is Data.Type ?
+                data as? E :
+                try? decoder.decode(E.self, from: data ?? Data())
+            
+            // Immediately dispatches back to main queue
+            // So UI can be safely updated in success and failure closures
+            DispatchQueue.main.async {
+                if let error = error {
+                    failure(.dataTaskError(error: error as NSError), errorResponse)
+                    return
+                }
+                guard let httpResponse = response as? HTTPURLResponse else {
+                    failure(.noNetworkResponse, errorResponse)
+                    return
+                }
+                if 200..<300 ~= httpResponse.statusCode {
+                    // If T is Data
+                    // Don't need to decode returned data
+                    if T.self is Data.Type {
+                        // If data is returned from network call
+                        if let tData = data as? T {
+                            success(tData)
+                            return
+                        }
+                        // In case no data is expected to be returned from network call
+                        // Avoids having to make success parameter optional
+                        // Will never fail so failure isn't called
+                        guard let noData = Data() as? T else { return }
+                        success(noData)
+                        return
+                    }
+                    // If T is not Data
+                    // Data is expected to be returned from network call
+                    // So calls failure if data is nil
+                    guard let data = data else {
+                        failure(.noDataReturned, errorResponse)
+                        return
+                    }
+                    // Decode data into T
+                    do {
+                        let decodedData = try decoder.decode(T.self, from: data)
+                        success(decodedData)
+                    } catch {
+                        failure(.decodingDataFailed(error: error), errorResponse)
+                        return
+                    }
+                // Response code is not in the 200s
+                } else {
+                    failure(.responseError(response: httpResponse), errorResponse)
+                }
+            }
+        }
+        // Performs data task
+        dataTask.resume()
+        return dataTask
+    }
+    
+    /// Convenience function to construct a url and network request,
+    /// and perform a network call all at once.
+    /// Decodes data into generic decodable types T and E
+    /// (T on success and E on failure)
+    ///
+    /// If no data is expected to be returned, declare success closure's parameter as type `Data`
+    ///
+    /// - Parameter baseURLString: The starting url for your network call as a string
+    /// - Parameter appendingPaths: An array of the paths to append to the end of the base url in order
+    /// - Parameter queries: A dictionary of query keys and values to be appended to the end of the final url
+    /// - Parameter method: The desired HTTP method for the request
+    ///  as an instance of `NetworkManager.Method` enum
+    /// - Parameter headers: The headers as a dictionary to attach to the request
+    /// - Parameter encodedData: The data to attach to the body of the request
+    /// - Parameter decoder: Used to decode data returned from network call .
+    /// Defaults to a new instance of `JSONDecoder`.
+    /// - Parameter success: Closure that will be run after a successful network call
+    /// - Parameter response: The decoded data returned from the network call
+    /// - Parameter failure: Closure that will be run after a failed network call
+    /// - Parameter error: The reason the network request failed
+    /// as an instance of `NetworkManager.NetworkError` enum
+    /// - Parameter errorResponse: The optional decoded data returned from the network call
+    ///
+    /// - Returns: The data task that was performed as a discardable result
+    /// if the url was successfully constructed.
+    /// If not no data task is performed or returned.
+    @discardableResult
+    func makeRequest<T: Decodable, E: Decodable>(baseURLString: String, appendingPaths: [String] = [], queries: [String: String] = [:], method: Method = .get, headers: [String: String] = [:], encodedData: Data? = nil, decoder: JSONDecoder = JSONDecoder(), success: @escaping (_ response: T) -> Void, failure: @escaping (_ error: NetworkError, _ errorResponse: E?) -> Void) -> URLSessionDataTask? {
+        // Constructs url
+        guard let url = Self.constructURL(baseURLString: baseURLString, appendingPaths: appendingPaths, queries: queries) else {
+            failure(.constructingURLFailed, nil)
+            return nil
+        }
+        // Constructs network request
+        let request = Self.constructRequest(method: method, url: url, headers: headers, encodedData: encodedData)
+        // makes request
+        let dataTask = makeRequest(request: request, decoder: decoder,  success: success, failure: failure)
+        return dataTask
     }
 }

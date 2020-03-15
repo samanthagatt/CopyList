@@ -20,6 +20,7 @@ class AppleMusicManager {
                 completion(true, error)
                 return
             }
+            // user doesn't have an account
             completion(false, error)
         }
     }
@@ -43,22 +44,14 @@ class AppleMusicManager {
     }
     
     func getPlaylists(completion: @escaping ([ApplePlaylist]?, Int?, NetworkManager.NetworkError?) -> Void) {
-        NetworkManager.shared.makeRequest(baseURLString: "https://api.music.apple.com/v1/me/library/", appendingPaths: ["playlists"], headers: ["Authorization": "Bearer \(appleDeveloperToken)", "Music-User-Token": userToken ?? ""]) { (playlistsDict: [String: [ApplePlaylist]]?, statusCode, networkError) in
-            guard let dict = playlistsDict, let playlists = dict["data"] else {
-                completion(nil, statusCode, networkError)
+        NetworkManager.shared.makeRequest(baseURLString: "https://api.music.apple.com/v1/me/library/", appendingPaths: ["playlists"], headers: ["Authorization": "Bearer \(appleDeveloperToken)", "Music-User-Token": userToken ?? ""], success: { (dict: [String: [ApplePlaylist]]) in
+            guard let playlists = dict["data"] else {
+                completion(nil, nil, nil)
                 return
             }
-            completion(playlists, statusCode, networkError)
-        }
-    }
-    
-    func getTracks(playlistID: String?, completion: @escaping ([ApplePlaylist]?, Int?, NetworkManager.NetworkError?) -> Void) {
-        NetworkManager.shared.makeRequest(baseURLString: "https://api.music.apple.com/v1/me/library", appendingPaths: ["playlists", playlistID ?? ""], headers: ["Authorization": "Bearer \(appleDeveloperToken)", "Music-User-Token": userToken ?? ""]) { (playlistsDict: [String: [ApplePlaylist]]?, statusCode, networkError) in
-            guard let dict = playlistsDict, let playlists = dict["data"] else {
-                completion(nil, statusCode, networkError)
-                return
-            }
-            completion(playlists, statusCode, networkError)
-        }
+            completion(playlists, nil, nil)
+        }, failure: { (error, _: Data?) in
+            completion(nil, nil, error)
+        })
     }
 }
