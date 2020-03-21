@@ -10,7 +10,7 @@ import UIKit
 
 class SpotifyPlaylistDetailViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
     
-    var trackController: SpotifyTrackController? {
+    var tracks: [SpotifyPlaylistTrack] = [] {
         didSet {
             tracksTableView.reloadData()
         }
@@ -41,14 +41,14 @@ class SpotifyPlaylistDetailViewController: UIViewController, UITableViewDelegate
     }
 }
 
-private typealias TableViewDataSource = SpotifyPlaylistDetailViewController
-extension TableViewDataSource {
+// MARK: Table View Data Source
+extension SpotifyPlaylistDetailViewController {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return trackController?.tracks.count ?? 0
+        return tracks.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SpotifyPlaylistsViewController.playlistCellID, for: indexPath)
-        cell.textLabel?.text = trackController?.tracks[indexPath.row].track?.name
+        cell.textLabel?.text = tracks[indexPath.row].track?.name
         return cell
     }
 }

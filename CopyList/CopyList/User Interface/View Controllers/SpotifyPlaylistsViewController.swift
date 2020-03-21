@@ -12,9 +12,9 @@ class SpotifyPlaylistsViewController: UIViewController, UITableViewDelegate, UIT
     
     static let playlistCellID = "SpotifyPlaylistCell"
     
-    var spotifyManager: SpotifyManager?
+    var spotifyPlaylistManager: SpotifyPlaylistManager?
     
-    var spotifyPlaylistController: SpotifyPlaylistController? {
+    var spotifyPlaylists: [SpotifyPlaylist] = [] {
         didSet {
             playlistTableView.reloadData()
         }
@@ -52,8 +52,10 @@ class SpotifyPlaylistsViewController: UIViewController, UITableViewDelegate, UIT
         let alertController = UIAlertController(title: "Log out", message: "Are you sure you'd like to log out?", preferredStyle: .alert)
         let logOutAction = UIAlertAction(title: "Log out", style: .destructive) { _ in
             KeychainManager.delete(spotifyRefreshKey)
-            self.spotifyManager?.accessToken = nil
-            self.present(LoginViewController(), animated: true)
+            self.spotifyPlaylistManager?.authManager.accessToken = nil
+            let loginVC = LoginViewController()
+            loginVC.modalPresentationStyle = .fullScreen
+            self.present(loginVC, animated: true)
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
@@ -62,33 +64,33 @@ class SpotifyPlaylistsViewController: UIViewController, UITableViewDelegate, UIT
     }
 }
 
-private typealias TableViewDataSource = SpotifyPlaylistsViewController
-extension TableViewDataSource {
+// MARK: Table View Data Source
+extension SpotifyPlaylistsViewController {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return spotifyPlaylistController?.playlists.count ?? 0
+        return spotifyPlaylists.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SpotifyPlaylistsViewController.playlistCellID, for: indexPath)
-        cell.textLabel?.text = spotifyPlaylistController?.playlists[indexPath.row].name
+        cell.textLabel?.text = spotifyPlaylists[indexPath.row].name
         return cell
     }
 }
 
-private typealias TableViewDelegate = SpotifyPlaylistsViewController
-extension TableViewDelegate {
+// MARK: Table View Delegate
+extension SpotifyPlaylistsViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let playlist = spotifyPlaylistController?.playlists[indexPath.row]
+        let playlist = spotifyPlaylists[indexPath.row]
         let detailVC = SpotifyPlaylistDetailViewController()
-        detailVC.navigationItem.title = playlist?.name ?? ""
+        detailVC.navigationItem.title = playlist.name ?? ""
         navigationController?.pushViewController(detailVC, animated: true)
-        spotifyManager?.getTracks(in: playlist?.id ?? "") { (spotifyResponse, statusCode, networkError) in
+        spotifyPlaylistManager?.getTracks(in: playlist.id ?? "") { (spotifyResponse, statusCode, networkError) in
             print(statusCode ?? "no status code")
             print(networkError ?? "no network error")
             guard let response = spotifyResponse else {
                 print("no response")
                 return
             }
-            detailVC.trackController = SpotifyTrackController(tracks: response.items)
+            detailVC.tracks = response.items ?? []
         }
     }
 }

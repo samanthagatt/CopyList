@@ -90,8 +90,8 @@ class WebViewController: UIViewController, WKNavigationDelegate {
     }
 }
 
-private typealias WebViewNavigationDelegate = WebViewController
-extension WebViewNavigationDelegate {
+// MARK: Web View Navigation Delegate
+extension WebViewController {
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
         guard let url = navigationAction.request.url,
             let components = URLComponents(url: url, resolvingAgainstBaseURL: true) else {

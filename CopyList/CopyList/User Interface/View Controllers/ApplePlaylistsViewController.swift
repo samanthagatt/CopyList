@@ -15,7 +15,7 @@ class ApplePlaylistsViewController: UIViewController, UITableViewDelegate, UITab
     
     var appleMusicManager = AppleMusicManager()
     
-    var applePlaylistController: ApplePlaylistController? {
+    var applePlaylists: [ApplePlaylist] = [] {
         didSet {
             playlistTableView.reloadData()
         }
@@ -40,7 +40,7 @@ class ApplePlaylistsViewController: UIViewController, UITableViewDelegate, UITab
             if success {
                 self.appleMusicManager.getPlaylists(completion: { (playlists, statusCode, networkError) in
                     if let playlists = playlists {
-                        self.applePlaylistController = ApplePlaylistController(playlists: playlists)
+                        self.applePlaylists = playlists
                     }
                 })
             } else {
@@ -61,20 +61,20 @@ class ApplePlaylistsViewController: UIViewController, UITableViewDelegate, UITab
     }
 }
 
-private typealias TableViewDataSource = ApplePlaylistsViewController
-extension TableViewDataSource {
+// MARK: Table View Data Source
+extension ApplePlaylistsViewController {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return applePlaylistController?.playlists.count ?? 0
+        return applePlaylists.count
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: ApplePlaylistsViewController.playlistCellID, for: indexPath)
-        cell.textLabel?.text = applePlaylistController?.playlists[indexPath.row].attributes?.name
+        cell.textLabel?.text = applePlaylists[indexPath.row].attributes?.name
         return cell
     }
 }
 
-private typealias TableViewDelegate = ApplePlaylistsViewController
-extension TableViewDelegate {
+// MARK: Table View Delegate
+extension ApplePlaylistsViewController {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
     }

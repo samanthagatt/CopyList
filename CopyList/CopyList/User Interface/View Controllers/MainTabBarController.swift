@@ -10,19 +10,16 @@ import UIKit
 
 class MainTabBarController: UITabBarController {
     
-    var spotifyManager: SpotifyManager? {
+    var spotifyPlaylistManager: SpotifyPlaylistManager? {
         didSet {
-            guard let manager = spotifyManager else { return }
-            spotifyPlaylistsVC.spotifyManager = manager
-            manager.getPlaylists { (spotifyPlaylists, statusCode, networkError) in
-                print(statusCode ?? "no status code")
-                print(networkError ?? "no network error")
+            guard let manager = spotifyPlaylistManager else { return }
+            spotifyPlaylistsVC.spotifyPlaylistManager = manager
+            spotifyPlaylistsVC.spotifyPlaylistManager?.getPlaylists { (spotifyPlaylists, statusCode, networkError) in
                 guard let playlists = spotifyPlaylists else {
                     print("No playlists returned!")
                     return
                 }
-                let playlistController = SpotifyPlaylistController(playlists: playlists.items)
-                self.spotifyPlaylistsVC.spotifyPlaylistController = playlistController
+                self.spotifyPlaylistsVC.spotifyPlaylists = playlists.items ?? []
             }
         }
     }

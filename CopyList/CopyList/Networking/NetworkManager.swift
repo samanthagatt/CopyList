@@ -13,7 +13,7 @@ class NetworkManager {
     static let shared = NetworkManager()
     
     /// Session used for all network calls
-    private var session: URLSession
+    private let session: URLSession
     
     init(headers: [String: String] = [:], session: URLSession = URLSession.shared) {
         self.session = session

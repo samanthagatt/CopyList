@@ -1,5 +1,5 @@
 //
-//  SpotifyManager.swift
+//  SpotifyAuthManager.swift
 //  CopyList
 //
 //  Created by Samantha Gatt on 7/5/19.
@@ -8,7 +8,12 @@
 
 import Foundation
 
-class SpotifyManager {
+class SpotifyAuthManager {
+    
+    // TODO: Rate Limiting
+    // If Web API returns status code 429, it means that you have sent too many requests.
+    // When this happens, check the Retry-After header, where you will see a number displayed.
+    // This is the number of seconds that you need to wait, before you try your request again.
     
     static let baseURLString = "https://accounts.spotify.com/"
     
@@ -20,7 +25,7 @@ class SpotifyManager {
     }()
     
     var requestAuthorizationURL: URL? = {
-        return NetworkManager.constructURL(baseURLString: SpotifyManager.baseURLString, appendingPaths: ["authorize"], queries: ["client_id": clientID, "response_type": "code", "redirect_uri": redirectURI, "state": "this is the stateeeee", "show_dialog": "true", "scope": "playlist-read-private playlist-read-collaborative"])
+        return NetworkManager.constructURL(baseURLString: SpotifyAuthManager.baseURLString, appendingPaths: ["authorize"], queries: ["client_id": clientID, "response_type": "code", "redirect_uri": redirectURI, "state": "this is the stateeeee", "show_dialog": "true", "scope": "playlist-read-private playlist-read-collaborative"])
     }()
     
     func requestRefreshAndAccessTokens(code: String, completion: @escaping (Bool?, Int?) -> Void) {
@@ -28,7 +33,7 @@ class SpotifyManager {
             completion(false, nil)
             return
         }
-        NetworkManager.shared.makeRequest(baseURLString: SpotifyManager.baseURLString, appendingPaths: ["api", "token"], method: .post, encodedData: encodedData, decoder: decoder,
+        NetworkManager.shared.makeRequest(baseURLString: Self.baseURLString, appendingPaths: ["api", "token"], method: .post, encodedData: encodedData, decoder: decoder,
         success: { (tokens: AccessAndRefreshTokenResponse) in
             guard let accessToken = tokens.accessToken,
                 let refreshToken = tokens.refreshToken else {
@@ -49,7 +54,7 @@ class SpotifyManager {
             completion(false, nil)
             return
         }
-        NetworkManager.shared.makeRequest(baseURLString: SpotifyManager.baseURLString, appendingPaths: ["api", "token"], method: .post, encodedData: encodedData, decoder: decoder,
+        NetworkManager.shared.makeRequest(baseURLString: Self.baseURLString, appendingPaths: ["api", "token"], method: .post, encodedData: encodedData, decoder: decoder,
         success: { (tokens: AccessAndRefreshTokenResponse) in
             guard let accessToken = tokens.accessToken else {
                 completion(false, nil)
@@ -62,32 +67,6 @@ class SpotifyManager {
             completion(true, nil)
         }, failure: { (error, _: Data?) in
             completion(false, nil)
-        })
-    }
-    
-    func getPlaylists(completion: @escaping (SpotifyPageResponse<SpotifyPlaylist>?, Int?, NetworkManager.NetworkError?) -> Void) {
-        guard let accessToken = accessToken else {
-            print("No access token!!")
-            return
-        }
-        NetworkManager.shared.makeRequest(baseURLString: "https://api.spotify.com/v1/me/playlists", headers: ["Authorization": "Bearer \(accessToken)"], decoder: decoder,
-        success: { (playlists: SpotifyPageResponse<SpotifyPlaylist>) in
-            completion(playlists, nil, nil)
-        }, failure: { (error, _: Data?) in
-            completion(nil, nil, error)
-        })
-    }
-    
-    func getTracks(in id: String, completion: @escaping (SpotifyPageResponse<SpotifyPlaylistTrack>?, Int?, NetworkManager.NetworkError?) -> Void) {
-        guard let accessToken = accessToken else {
-            print("No access token!!")
-            return
-        }
-        NetworkManager.shared.makeRequest(baseURLString: "https://api.spotify.com/v1/playlists/\(id)/tracks", headers: ["Authorization": "Bearer \(accessToken)"], decoder: decoder,
-        success: { (tracks: SpotifyPageResponse<SpotifyPlaylistTrack>) in
-            completion(tracks, nil, nil)
-        }, failure: { (error, _: Data?) in
-            completion(nil, nil, error)
         })
     }
 }

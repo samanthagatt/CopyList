@@ -18,10 +18,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         if let refreshToken = KeychainManager.get(spotifyRefreshKey) {
             let tabController = MainTabBarController()
-            let spotifyManager = SpotifyManager()
-            spotifyManager.refreshAccessToken(refreshToken) { (success, statusCode) in
-                print(statusCode ?? "no statusCode")
-                tabController.spotifyManager = spotifyManager
+            let spotifyAuthManager = SpotifyAuthManager()
+            spotifyAuthManager.refreshAccessToken(refreshToken) { (success, statusCode) in
+                tabController.spotifyPlaylistManager = SpotifyPlaylistManager(spotifyAuthManager)
             }
             window?.rootViewController = tabController
         } else {
@@ -54,11 +53,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 print("There was an error!!", error)
             }
             if let code = code, let _ = state {
-                let manager = SpotifyManager()
+                let manager = SpotifyAuthManager()
                 manager.requestRefreshAndAccessTokens(code: code) { (success, _) in
                     if success == true {
                         let tabController = MainTabBarController()
-                        tabController.spotifyManager = manager
+                        tabController.spotifyPlaylistManager = SpotifyPlaylistManager(manager)
                         self.window?.rootViewController = tabController
                         self.window?.makeKeyAndVisible()
                     }
