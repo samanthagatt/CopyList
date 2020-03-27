@@ -22,29 +22,19 @@ class SpotifyPlaylistManager {
         self.authManager = authManager
     }
     
-    func getPlaylists(completion: @escaping (SpotifyPageResponse<SpotifyPlaylist>?, Int?, NetworkManager.NetworkError?) -> Void) {
+    func getPlaylists(completion: @escaping (NetworkCompletion<SpotifyPageResponse<SpotifyPlaylist>, Data?>) -> Void) {
         guard let accessToken = authManager.accessToken else {
             print("No access token!!")
             return
         }
-        NetworkManager.shared.makeRequest(baseURLString: "https://api.spotify.com/v1/me/playlists", queries: ["limit": "50"], headers: ["Authorization": "Bearer \(accessToken)"], decoder: decoder,
-        success: { (playlists: SpotifyPageResponse<SpotifyPlaylist>) in
-            completion(playlists, nil, nil)
-        }, failure: { (error, _: Data?) in
-            completion(nil, nil, error)
-        })
+        NetworkManager.shared.makeRequest(baseURLString: "https://api.spotify.com/v1/me/playlists", queries: ["limit": "50"], headers: ["Authorization": "Bearer \(accessToken)"], decoder: decoder, completion: completion)
     }
     
-    func getTracks(in id: String, completion: @escaping (SpotifyPageResponse<SpotifyPlaylistTrack>?, Int?, NetworkManager.NetworkError?) -> Void) {
+    func getTracks(in id: String, completion: @escaping (NetworkCompletion<SpotifyPageResponse<SpotifyPlaylistTrack>, Data?>) -> Void) {
         guard let accessToken = authManager.accessToken else {
             print("No access token!!")
             return
         }
-        NetworkManager.shared.makeRequest(baseURLString: "https://api.spotify.com/v1/playlists/\(id)/tracks", headers: ["Authorization": "Bearer \(accessToken)"], decoder: decoder,
-        success: { (tracks: SpotifyPageResponse<SpotifyPlaylistTrack>) in
-            completion(tracks, nil, nil)
-        }, failure: { (error, _: Data?) in
-            completion(nil, nil, error)
-        })
+        NetworkManager.shared.makeRequest(baseURLString: "https://api.spotify.com/v1/playlists/\(id)/tracks", headers: ["Authorization": "Bearer \(accessToken)"], decoder: decoder, completion: completion)
     }
 }

@@ -17,10 +17,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         if let refreshToken = KeychainManager.get(spotifyRefreshKey) {
-            let tabController = MainTabBarController()
+            let tabController = UIStoryboard(name: "MainTabBar", bundle: .main).instantiateInitialViewController() as? MainTabBarController
             let spotifyAuthManager = SpotifyAuthManager()
-            spotifyAuthManager.refreshAccessToken(refreshToken) { (success, statusCode) in
-                tabController.spotifyPlaylistManager = SpotifyPlaylistManager(spotifyAuthManager)
+            spotifyAuthManager.refreshAccessToken(refreshToken) { _ in
+                tabController?.spotifyPlaylistManager = SpotifyPlaylistManager(spotifyAuthManager)
             }
             window?.rootViewController = tabController
         } else {
@@ -54,13 +54,14 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             }
             if let code = code, let _ = state {
                 let manager = SpotifyAuthManager()
-                manager.requestRefreshAndAccessTokens(code: code) { (success, _) in
-                    if success == true {
-                        let tabController = MainTabBarController()
-                        tabController.spotifyPlaylistManager = SpotifyPlaylistManager(manager)
+                manager.requestRefreshAndAccessTokens(code: code) { success in
+                    if success {
+                        let tabController = UIStoryboard(name: "MainTabBar", bundle: .main).instantiateInitialViewController() as? MainTabBarController
+                        tabController?.spotifyPlaylistManager = SpotifyPlaylistManager(manager)
                         self.window?.rootViewController = tabController
                         self.window?.makeKeyAndVisible()
                     }
+                    // TODO: Handle errors
                 }
             }
         }

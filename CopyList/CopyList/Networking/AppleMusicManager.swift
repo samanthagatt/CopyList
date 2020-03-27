@@ -43,8 +43,22 @@ class AppleMusicManager {
         }
     }
     
-    func getPlaylists(completion: @escaping ([ApplePlaylist]?, Int?, NetworkManager.NetworkError?) -> Void) {
-        NetworkManager.shared.makeRequest(baseURLString: "https://api.music.apple.com/v1/me/library/", appendingPaths: ["playlists"], headers: ["Authorization": "Bearer \(appleDeveloperToken)", "Music-User-Token": userToken ?? ""], success: { (dict: [String: [ApplePlaylist]]) in
+    func getPlaylists(completion: @escaping (NetworkCompletion<[ApplePlaylist], Data?>) -> Void) {
+        NetworkManager.shared.makeRequest(baseURLString: "https://api.music.apple.com/v1/me/library/", appendingPaths: ["playlists"], headers: ["Authorization": "Bearer \(appleDeveloperToken)", "Music-User-Token": userToken ?? ""]) { (dictCompletion: NetworkCompletion<[String: [ApplePlaylist]], Data?>) in
+            switch dictCompletion {
+            case .success(let dict):
+                guard let playlists = dict["data"] else {
+                    completion(.failure(response: nil, error: .noDataReturned))
+                    return
+                }
+                completion(.success(response: playlists))
+            case .failure(let response, let error):
+                completion(.failure(response: response, error: error))
+            }
+        }
+        
+        /*
+         success: { (dict: [String: [ApplePlaylist]]) in
             guard let playlists = dict["data"] else {
                 completion(nil, nil, nil)
                 return
@@ -52,6 +66,7 @@ class AppleMusicManager {
             completion(playlists, nil, nil)
         }, failure: { (error, _: Data?) in
             completion(nil, nil, error)
-        })
+        }
+         */
     }
 }

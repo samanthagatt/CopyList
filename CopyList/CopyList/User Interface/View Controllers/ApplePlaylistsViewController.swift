@@ -38,11 +38,15 @@ class ApplePlaylistsViewController: UIViewController, UITableViewDelegate, UITab
         
         appleMusicManager.getUserToken { (success, error) in
             if success {
-                self.appleMusicManager.getPlaylists(completion: { (playlists, statusCode, networkError) in
-                    if let playlists = playlists {
+                self.appleMusicManager.getPlaylists { completion in
+                    switch completion {
+                    case .success(let playlists):
                         self.applePlaylists = playlists
+                    // TODO: Handle errors
+                    case .failure(_, _):
+                        return
                     }
-                })
+                }
             } else {
                 let alertController = UIAlertController(title: "Uh oh", message: "CopyList requires access to the music on your divice in order to work. You can allow the app access by going to Settings -> Privacy -> Media & Apple Music", preferredStyle: .alert)
                 let action = UIAlertAction(title: "Okay", style: .default, handler: nil)

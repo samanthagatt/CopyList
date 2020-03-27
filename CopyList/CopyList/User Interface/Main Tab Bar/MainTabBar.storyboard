@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="15705" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="ONX-MQ-rc4">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Main Tab Bar Controller-->
+        <scene sceneID="eh3-ak-IWq">
+            <objects>
+                <tabBarController id="ONX-MQ-rc4" customClass="MainTabBarController" customModule="CopyList" customModuleProvider="target" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="dy9-Ce-85p">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="Rgf-UU-K6y" kind="relationship" relationship="viewControllers" id="bbx-mV-qTa"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="vRy-M9-MT8" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-896" y="-242"/>
+        </scene>
+        <!--SpotifyPlaylists-->
+        <scene sceneID="uLr-Y7-CpI">
+            <objects>
+                <viewControllerPlaceholder storyboardName="SpotifyPlaylists" id="Rgf-UU-K6y" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Spotify" selectedImage="spofity" id="c3k-UA-pBq"/>
+                </viewControllerPlaceholder>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="n3K-eQ-Rqv" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-289" y="-434"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="spofity" width="241.33332824707031" height="239.66667175292969"/>
+    </resources>
+</document>

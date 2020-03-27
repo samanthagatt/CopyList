@@ -78,15 +78,20 @@ class WebViewController: UIViewController, WKNavigationDelegate {
     }
     
     private func showProgressView() {
+        progressView.alpha = 0
+        progressView.isHidden = false
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
             self.progressView.alpha = 1
         }, completion: nil)
     }
     
     private func hideProgressView() {
+        progressView.alpha = 1
         UIView.animate(withDuration: 0.5, delay: 0, options: .curveEaseInOut, animations: {
             self.progressView.alpha = 0
-        }, completion: nil)
+        }, completion: { [weak self] bool in
+            self?.progressView.isHidden = true
+        })
     }
 }
 
